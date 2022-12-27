@@ -1,7 +1,5 @@
 let password = document.getElementById("password");
 let generateButton = document.getElementById("generate");
-let copyButton = document.getElementById("copy");
-let copiedMessage = document.querySelector(".copied-message");
 let allCheckBoxes = document.querySelectorAll("input[type = 'checkbox']");
 let box1 = document.getElementById("_1");
 let box2 = document.getElementById("_2");
@@ -12,11 +10,26 @@ let capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 let specialCharacters = "!@#$%^&*()_-[]{}";
 let numbers = "1234567890";
 
+let table = document.querySelector("table");
+
+let clearHistoryButton = document.querySelector(".clear-history");
+
+let passwordsArray;
+if (window.localStorage.passwords) {
+  clearHistoryButton.style.display = "inline";
+  passwordsArray = JSON.parse(window.localStorage.passwords);
+  createPassword(passwordsArray);
+} else {
+  clearHistoryButton.style.display = "none";
+  passwordsArray = [];
+}
+
 let random = "";
 
 let chosenCategory = "";
 
 generateButton.onclick = () => {
+  clearHistoryButton.style.display = "inline";
   let count = 0;
   allCheckBoxes.forEach((box) => {
     if (box.checked === true) {
@@ -80,6 +93,17 @@ generateButton.onclick = () => {
 
   password.value = "";
   generatePassword(chosenCategory);
+
+  // Create an object
+  let passwordObject = {
+    password: password.value,
+  };
+
+  passwordsArray.push(passwordObject);
+
+  window.localStorage.passwords = JSON.stringify(passwordsArray);
+
+  createPassword(passwordsArray);
 };
 
 function generatePassword(category) {
@@ -97,11 +121,42 @@ function concatPassword(...categories) {
   return categories.join("");
 }
 
-copyButton.onclick = () => {
-    navigator.clipboard.writeText(password.value)
-    copiedMessage.classList.add("show-message")
-    let messageTIme = setInterval(() => {
-        copiedMessage.classList.remove("show-message")
-        clearInterval(messageTIme)
-    }, 500) 
+function createPassword(array) {
+  table.innerHTML = "";
+  for (let i = 0; i < array.length; i++) {
+    let tr = document.createElement("tr");
+    let td1 = document.createElement("td");
+    let td1Text = document.createTextNode(i + 1 + " -");
+    let td2 = document.createElement("td");
+    let td2Span = document.createElement("span");
+    let td2Text = document.createTextNode(array[i].password);
+    let button = document.createElement("button");
+    let buttonText = document.createTextNode("Copy");
+    button.appendChild(buttonText);
+    td2Span.appendChild(td2Text);
+    td2.appendChild(td2Span);
+    td2.appendChild(button);
+    td1.appendChild(td1Text);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    table.appendChild(tr);
+  }
+
+  let buttons = document.querySelectorAll("tr td button");
+  buttons.forEach((button) => {
+    button.onclick = (e) => {
+      buttons.forEach((button) => {
+        button.innerHTML = "Copy";
+      });
+      navigator.clipboard.writeText(e.target.previousElementSibling.innerHTML);
+      button.innerHTML = "Copied";
+    };
+  });
 }
+
+clearHistoryButton.onclick = () => {
+  passwordsArray = [];
+  window.localStorage.clear();
+  table.innerHTML = "";
+  clearHistoryButton.style.display = "none";
+};

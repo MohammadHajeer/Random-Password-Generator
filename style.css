@@ -15,39 +15,54 @@
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  background-color: #1b1b1b;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.shape {
+  width: 400px;
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0.181);
+  position: absolute;
+  z-index: -1;
+  transform: skew(60deg);
 }
 
 .container {
   width: 600px;
   max-width: 100%;
   height: 400px;
-  background-color: #eee;
+  background-color: #2195f304;
   padding: var(--padding);
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  box-shadow: 0 0 10px black inset, 0 0 10px black;
+  overflow: hidden;
+  position: relative;
 }
 
 .container .title {
-  background-color: var(--mainColor1);
-  color: white;
+  color: var(--mainColor1);
   font-size: 2rem;
   padding: var(--padding);
   text-align: center;
+  font-weight: bold;
 }
 
-.container .inputs {
+.container .input {
   height: 70px;
   padding: var(--padding);
   display: flex;
   gap: 10px;
 }
 
-.container .inputs input {
+.container .input input {
   flex-grow: 1;
   padding: var(--padding);
   border: none;
@@ -56,20 +71,9 @@ body {
   letter-spacing: 4px;
   text-align: center;
   font-size: 2rem;
-}
-
-.container .inputs button {
-  border: none;
-  background-color: var(--mainColor2);
-  color: white;
-  padding: var(--padding);
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
-}
-
-.container .inputs button:hover {
-  background-color: var(--hoverColor);
+  background-color: rgba(0, 0, 0, 0.21);
+  box-shadow: 0 0 30px black inset;
+  color: var(--mainColor1);
 }
 
 .container .checkboxes {
@@ -86,50 +90,36 @@ body {
 .container .checkboxes div input,
 .container .checkboxes div label {
   cursor: pointer;
+  transition: 0.5s;
+  color: white;
+  font-weight: bold;
 }
 
 .container .checkboxes div input:checked + label {
   color: var(--mainColor1);
 }
 
-.container .open {
+.container .generate {
   padding: var(--padding);
 }
 
-.container .open button {
+.container .generate button {
   width: 100%;
   padding: var(--padding);
   border: none;
-  background-color: var(--mainColor2);
+  background-color: rgba(0, 0, 0, 0.296);
   color: white;
   cursor: pointer;
   position: relative;
-  transition: background-color 0.3s;
-}
-
-.container .open button:hover {
-  background-color: var(--hoverColor);
-}
-
-.container .open button span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  background-color: var(--mainColor1);
-  font-size: 1rem;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 190%;
-  z-index: -1;
-  transform: scaleY(0);
-  transform-origin: top;
   transition: 0.3s;
+  box-shadow: 0 0 5px 2px black inset, 0 0 5px black;
+  font-weight: bold;
+  overflow: visible;
 }
 
-.container .open button .show-message {
-  transform: scaleY(1);
+.container .generate button:hover {
+  background-color: rgba(0, 0, 0, 0.181);
+  box-shadow: none;
 }
 
 @media (max-width: 450px) {
@@ -137,7 +127,7 @@ body {
     font-size: 10px;
   }
 
-  .container .inputs input {
+  .container .input input {
     font-size: 1.4rem;
     font-weight: bold;
   }
@@ -149,11 +139,87 @@ body {
     height: fit-content;
   }
 
-  .container .inputs {
+  .container .input {
     flex-direction: column;
   }
 
   .container .checkboxes {
     margin-top: 40px;
   }
+}
+
+.passwords-history {
+  text-align: center;
+}
+
+.passwords-history h2 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.passwords-history h2 span {
+  color: var(--mainColor1);
+}
+
+.passwords-history .clear-history {
+  margin-bottom: 10px;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  background-color: #1b1b1b;
+  box-shadow: 0 0 10px black inset;
+  color: white;
+  position: relative;
+  z-index: 1;
+}
+
+.passwords-history .clear-history span {
+  position: absolute;
+  background-color: var(--mainColor1);
+  box-shadow: 0 0 10px black inset;
+  inset: 0;
+  z-index: -1;
+  transform: scale(0);
+  transition: 0.3s;
+}
+
+.passwords-history .clear-history:hover span {
+  transform: scale(1);
+}
+
+.passwords-history table tr {
+  box-shadow: 0 0 5px black inset;
+}
+
+.passwords-history table tr td {
+  padding: 10px;
+}
+
+.passwords-history table tr td:nth-child(1) {
+  color: var(--mainColor1);
+}
+
+.passwords-history table tr td:nth-child(2) {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.passwords-history table tr td:nth-child(2) button {
+  padding: 5px 10px;
+  border: none;
+  background-color: #1b1b1b;
+  box-shadow: 0 0 5px black inset;
+  color: var(--mainColor1);
+  cursor: pointer;
+  transition: 0.5s;
+  font-weight: bold;
+}
+
+.passwords-history table tr td:nth-child(2) button:hover {
+  background-color: black;
+  color: white;
 }
